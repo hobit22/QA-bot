@@ -2,6 +2,9 @@
 langchain
 openai
 selenium
+python-dotenv
+nest_asyncio
+pytest-playwright
 
 # my qa bot
 playwright

@@ -3,7 +3,7 @@ from langchain_community.tools.playwright.utils import (
     create_sync_playwright_browser,
     create_async_playwright_browser,  # A synchronous browser is available, though it isn't compatible with jupyter.\n",      },
 )
-from langchain_community.tools.playwright import ClickTool
+from type_text_tool import TypeTextTool
 import nest_asyncio
 from typing import Literal
 from playwright.async_api import Page, FloatRect
@@ -33,7 +33,10 @@ nest_asyncio.apply()
 async_browser = create_async_playwright_browser(headless= False)
 sync_browser = create_sync_playwright_browser(headless= False)
 toolkit = PlayWrightBrowserToolkit.from_browser(sync_browser=sync_browser)
+type_text_tool = TypeTextTool(sync_browser=sync_browser)
 tools = toolkit.get_tools()
+tools.append(type_text_tool)
+
 
 from langchain.chat_models import ChatOpenAI
 
@@ -94,14 +97,11 @@ agent_chain = initialize_agent(
     # callback_manager=cManager
 )
 
-async def test():
-    result = await agent_chain.arun("""
-                                    """)
-    print(result)
-
-# asyncio.run(test())
-
 result = agent_chain.run("""
+                                    go to m5-dev.matamath.net/vitruv.hs/login
+                                    enter the text as 23-10101 in the ID
+                                    enter the text as 2023ejrmffhfl! in the PW
+                                    click button 로그인  
                                 """)
 print(result)
 
