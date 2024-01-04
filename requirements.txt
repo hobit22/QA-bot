@@ -1,0 +1,9 @@
+# default 
+langchain
+openai
+selenium
+
+# my qa bot
+playwright
+lxml
+beautifulsoup4
