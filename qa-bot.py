@@ -99,8 +99,8 @@ agent_chain = initialize_agent(
 
 result = agent_chain.run("""
                                     go to m5-dev.matamath.net/vitruv.hs/login
-                                    enter the text as 23-10101 in the ID
-                                    enter the text as 2023ejrmffhfl! in the PW
+                                    type the text as 23-10101 in username
+                                    type the text as 2023ejrmffhfl! in password
                                     click button 로그인  
                                 """)
 print(result)
