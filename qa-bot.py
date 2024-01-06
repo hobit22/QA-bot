@@ -4,6 +4,7 @@ from langchain_community.tools.playwright.utils import (
     create_async_playwright_browser,  # A synchronous browser is available, though it isn't compatible with jupyter.\n",      },
 )
 from type_text_tool import TypeTextTool
+from click_tool import ClickTool
 import nest_asyncio
 from typing import Literal
 from playwright.async_api import Page, FloatRect
@@ -34,8 +35,13 @@ async_browser = create_async_playwright_browser(headless= False)
 sync_browser = create_sync_playwright_browser(headless= False)
 toolkit = PlayWrightBrowserToolkit.from_browser(sync_browser=sync_browser)
 type_text_tool = TypeTextTool(sync_browser=sync_browser)
-tools = toolkit.get_tools()
-tools.append(type_text_tool)
+click_tool = ClickTool(sync_browser=sync_browser)
+playwright_tools = toolkit.get_tools()
+tools_by_name = {tool.name: tool for tool in playwright_tools}
+navigate_browser = tools_by_name["navigate_browser"]
+
+
+tools = [navigate_browser, type_text_tool, click_tool]
 
 
 from langchain.chat_models import ChatOpenAI
@@ -98,11 +104,11 @@ agent_chain = initialize_agent(
 )
 
 result = agent_chain.run("""
-                        1. go to m5-dev.matamath.net/vitruv.hs/login
+                        1. go to https://m5-dev.matamath.net/vitruv.hs/login
                         2. type the text as hobeen.kim@vitruv.co.kr in username
                         3. type the text as 2023ejrmffhfl! in password
                         4. click "로그인"
-                        5. click "로그아웃"
+                        5. find "마타와 연산학습" and click that
                         end
 
                                 """)
