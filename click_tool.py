@@ -53,12 +53,12 @@ class ClickTool(BaseBrowserTool):
             raise ValueError(f"Synchronous browser not provided to {self.name}")
         page = get_current_page(self.sync_browser)
         # Navigate to the desired webpage before using this tool
-        # selector_effective = self._selector_effective(selector=selector)
-        selector_effective = f"text={selector}"
+        selector_effective = self._selector_effective(selector=selector)
+        # selector_effective = f"text={selector}"
         from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
         try:
-            page.get_by_text(selector).click(
+            page.get_by_text(selector_effective).click(
                 # strict=self.playwright_strict,
                 timeout=self.playwright_timeout
             )

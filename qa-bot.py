@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 # langchain
 from langchain.agents import AgentType, initialize_agent
 from langchain.callbacks import manager
+from langchain.chat_models import ChatOpenAI
 from langchain_community.agent_toolkits import PlayWrightBrowserToolkit
 from langchain_community.tools.playwright.utils import (
     create_sync_playwright_browser,
@@ -31,9 +32,8 @@ navigate_browser = tools_by_name["navigate_browser"]
 
 
 tools = [navigate_browser, type_text_tool, click_tool]
+# tools = playwright_tools.append(type_text_tool)
 
-
-from langchain.chat_models import ChatOpenAI
 
 llm = ChatOpenAI(
     temperature=0.3,
@@ -56,7 +56,7 @@ result = agent_chain.run("""
                         2. type the text as hobeen.kim@vitruv.co.kr in username
                         3. type the text as 2023ejrmffhfl! in password
                         4. click "로그인"
-                        5. find "마타와 연산학습" and click that
+                        5. click "마타와 연산학습"
                         end
 
                                 """)

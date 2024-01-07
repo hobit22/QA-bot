@@ -36,15 +36,13 @@ def _get_element_sync(page: SyncPage, selector: str):
 async def _get_element_async(page: AsyncPage, selector: str):
     return await page.query_selector(selector)
 
+def _type_text(page: SyncPage, selector: str, text: str) -> None:
+    """Type text into an element matching the given CSS selector."""
+    page.type(selector, text)
+
 async def _atype_text(page: AsyncPage, selector: str, text: str) -> None:
     """Type text into an element matching the given CSS selector.""" 
     await page.type(selector, text)
-
-
-def _type_text(page: SyncPage, selector: str, text: str) -> None:
-    """Type text into an element matching the given CSS selector."""
-    page.type(selector, text).result()
-
 
 class TypeTextTool(BaseBrowserTool):
     """Tool for typing text into elements in the current web page matching a CSS selector."""
@@ -75,13 +73,12 @@ class TypeTextTool(BaseBrowserTool):
             
             # Navigate to the desired webpage before using this tool
             selector_effective = self._selector_effective(selector=selector)
-            element = _get_element_sync(page, selector)
+            element = _get_element_sync(page, selector_effective)
             if element is None:
                 raise ValueError(f"Element with selector '{selector}' not found")
-            # _type_text(page, selector, text)
-
+            
             try:
-                page.type(selector, text)
+                _type_text(page, selector, text)
             except PlaywrightTimeoutError:
                 return f"Unable to click on element '{selector}'" 
             return f"Typed '{text}' into elements with selector '{selector}'"
