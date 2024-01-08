@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 class TypeTextToolInput(BaseModel):
     """Input for TypeTextTool."""
 
-    selector: str = Field(..., description="CSS selector for the element to be typed")
+    selector: str = Field(..., description="CSS selector for the element to be typed. the element is input type")
     text: str = Field(
         ...,
         description="Text to be typed into the selected element"
@@ -37,7 +37,7 @@ async def _get_element_async(page: AsyncPage, selector: str):
     return await page.query_selector(selector)
 
 def _type_text(page: SyncPage, selector: str, text: str) -> None:
-    """Type text into an element matching the given CSS selector."""
+    """Type text into an input type element matching the given CSS selector."""
     page.type(selector, text)
 
 async def _atype_text(page: AsyncPage, selector: str, text: str) -> None:
@@ -45,11 +45,11 @@ async def _atype_text(page: AsyncPage, selector: str, text: str) -> None:
     await page.type(selector, text)
 
 class TypeTextTool(BaseBrowserTool):
-    """Tool for typing text into elements in the current web page matching a CSS selector."""
+    """Tool for typing text into input type elements in the current web page matching a CSS selector."""
 
     name: str = "type_text"
     description: str = (
-        "Type text into an element in the current web page matching the given CSS selector"
+        "Type text into an input type element in the current web page matching the given CSS selector"
     )
     args_schema: Type[BaseModel] = TypeTextToolInput
     
