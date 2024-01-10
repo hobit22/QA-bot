@@ -18,17 +18,17 @@ from langchain_community.tools.playwright.utils import (
 class ClickToolInput(BaseModel):
     """Input for ClickTool."""
 
-    selector: str = Field(
+    text: str = Field(
         ..., 
-        description="Selector for the element to click. This can be a CSS selector, an XPath selector, or a Playwright text selector."
+        description="The text that the element you are looking for has"
 )
 
 
 class ClickTool(BaseBrowserTool):
-    """Tool for clicking on an element with the given XPath selector."""
+    """Tool for clicking on an element with the given text."""
 
     name: str = "click_element"
-    description: str = "Click on an element with the given XPath selector"
+    description: str = "Click on an element with the given text"
     args_schema: Type[BaseModel] = ClickToolInput
 
     visible_only: bool = True
@@ -45,7 +45,7 @@ class ClickTool(BaseBrowserTool):
 
     def _run(
         self,
-        selector: str,
+        text: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         """Use the tool."""
@@ -53,18 +53,20 @@ class ClickTool(BaseBrowserTool):
             raise ValueError(f"Synchronous browser not provided to {self.name}")
         page = get_current_page(self.sync_browser)
         # Navigate to the desired webpage before using this tool
-        selector_effective = self._selector_effective(selector=selector)
+        selector_effective = self._selector_effective(selector=text)
         # selector_effective = f"text={selector}"
         from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
+        element = page.get_by_text(text)
+        print(element)
 
         try:
-            page.get_by_text(selector_effective).click(
+            element.click(
                 # strict=self.playwright_strict,
                 timeout=self.playwright_timeout
             )
         except PlaywrightTimeoutError:
-            return f"Unable to click on element '{selector}'"
-        return f"Clicked element '{selector}'"
+            return f"Unable to click on element '{text}'"
+        return f"Clicked element '{text}'"
 
     async def _arun(
         self,
