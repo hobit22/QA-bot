@@ -35,7 +35,7 @@ navigate_browser = tools_by_name["navigate_browser"]
 tools = [navigate_browser, type_text_tool, click_tool]
 # tools = playwright_tools.append(type_text_tool)
 
-username = os.getenv('USERNAME')
+id = os.getenv('ID')
 password = os.getenv('PASSWORD')
 
 llm = ChatOpenAI(
@@ -56,7 +56,7 @@ agent_chain = initialize_agent(
 
 instructions = f"""
     1. go to https://m5-dev.matamath.net/vitruv.hs/login
-    2. type the text as {username} in username
+    2. type the text as {id} in username
     3. type the text as {password} in password
     4. click "로그인"
     5. click "마타와 연산학습"
