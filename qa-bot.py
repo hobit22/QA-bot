@@ -53,8 +53,8 @@ agent_chain = initialize_agent(
 
 result = agent_chain.run("""
                         1. go to https://m5-dev.matamath.net/vitruv.hs/login
-                        2. type the text as hobeen.kim@vitruv.co.kr in username
-                        3. type the text as 2023ejrmffhfl! in password
+                        2. type the text as {{username}} in username
+                        3. type the text as {{password}} in password
                         4. click "로그인"
                         5. click "마타와 연산학습"
                         end
