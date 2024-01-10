@@ -1,4 +1,5 @@
 import nest_asyncio
+import os
 from dotenv import load_dotenv
 
 # langchain
@@ -34,6 +35,8 @@ navigate_browser = tools_by_name["navigate_browser"]
 tools = [navigate_browser, type_text_tool, click_tool]
 # tools = playwright_tools.append(type_text_tool)
 
+username = os.getenv('USERNAME')
+password = os.getenv('PASSWORD')
 
 llm = ChatOpenAI(
     temperature=0.3,
@@ -51,13 +54,16 @@ agent_chain = initialize_agent(
     # callback_manager=cManager
 )
 
-result = agent_chain.run("""
-                        1. go to https://m5-dev.matamath.net/vitruv.hs/login
-                        2. type the text as {{username}} in username
-                        3. type the text as {{password}} in password
-                        4. click "로그인"
-                        5. click "마타와 연산학습"
-                        end
+instructions = f"""
+    1. go to https://m5-dev.matamath.net/vitruv.hs/login
+    2. type the text as {username} in username
+    3. type the text as {password} in password
+    4. click "로그인"
+    5. click "마타와 연산학습"
+    end
+"""
 
-                                """)
+print(instructions)
+
+result = agent_chain.invoke(instructions)
 print(result)
